@@ -35,7 +35,7 @@ https://www.kaggle.com/datasets/mlg-ulb/creditcardfraud
 ---
 
 ## Project Structure
-
+```
 ml-engineer-assessment/
 ├── src/ # All ML logic (clean & modular)
 ├── models/ # Saved trained model
@@ -43,6 +43,7 @@ ml-engineer-assessment/
 ├── run_pipeline.py # One command to run everything
 ├── requirements.txt # Dependencies
 └── README.md
+```
 
 ---
 
