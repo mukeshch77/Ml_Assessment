@@ -1,4 +1,4 @@
-<img width="991" height="670" alt="system_design" src="https://github.com/user-attachments/assets/67ee4454-732e-4eb7-af87-89b45ef12fdf" /># ML Engineer Practical Assessment – Fraud Detection
+# ML Engineer Practical Assessment – Fraud Detection
 
 ## Problem Statement
 Build a production-grade machine learning pipeline for fraud detection
@@ -164,7 +164,7 @@ A simple real-world fraud detection system design is included.
 Diagram available at:
 
 diagrams/system_design.png
-
+<img width="991" height="670" alt="system_design" src="https://github.com/user-attachments/assets/67ee4454-732e-4eb7-af87-89b45ef12fdf" />
 
 ---
 
