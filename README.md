@@ -47,9 +47,6 @@ ml-engineer-assessment/
 
 ---
 
-
----
-
 ## What This Pipeline Does
 
 ### 1. Data Loading
