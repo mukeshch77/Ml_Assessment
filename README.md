@@ -7,8 +7,22 @@ using credit card transaction data.
 ---
 
 ## Dataset
-Credit Card Fraud Detection dataset.
-Highly imbalanced dataset with ~0.17% fraud cases.
+
+### Credit Card Fraud Detection Dataset
+
+- Transactions made by European cardholders  
+- Highly imbalanced dataset (~0.17% fraud cases)  
+- Target column: `Class`  
+  - `0` → Normal transaction  
+  - `1` → Fraud transaction  
+
+🔗 Dataset link (Kaggle):  
+https://www.kaggle.com/datasets/mlg-ulb/creditcardfraud
+
+- Dataset is not included in this repository due to size limits.  
+- After downloading, place the file here:
+
+- data/raw/creditcard.csv
 
 ---
 
@@ -20,161 +34,156 @@ Highly imbalanced dataset with ~0.17% fraud cases.
 
 ---
 
-## ML Pipeline Steps
+## Project Structure
 
-### 1. Data Validation & Cleaning
-- Checked missing values and duplicates
-- Removed duplicate rows
-- Analyzed class imbalance
-
-### 2. Feature Engineering
-Engineered meaningful features:
-- Amount_log: log transformation of transaction amount
-- Amount_squared: captures high-value transactions
-- Hour: transaction hour extracted from time
-- Is_night: flag for night transactions
-
-### 3. Model Selection
-RandomForestClassifier chosen due to:
-- Ability to handle non-linear patterns
-- Robustness to imbalanced data
-- Minimal feature scaling requirements
-
-### 4. Training & Cross-Validation
-- Stratified train-test split
-- 5-fold Stratified Cross-Validation
-- F1-score used as primary metric
-
-### 5. Evaluation Metrics
-- Precision, Recall, F1-score
-- ROC-AUC
-- Confusion Matrix
-
-### 6. Model Persistence & Reproducibility
-- Model saved using joblib
-- Fixed random seeds for reproducibility
+ml-engineer-assessment/
+├── src/ # All ML logic (clean & modular)
+├── models/ # Saved trained model
+├── diagrams/ # System design diagram
+├── run_pipeline.py # One command to run everything
+├── requirements.txt # Dependencies
+└── README.md
 
 ---
 
-## Results
-- Cross-validated F1-score: ~0.83
-- ROC-AUC: ~0.92
-- Precision (Fraud): ~0.97
-- Recall (Fraud): ~0.71
 
 ---
 
-## Notes
-- Accuracy not used due to class imbalance
-- Pipeline designed with production best practices
+## What This Pipeline Does
 
-## TASK 2: Model Debugging & Stability
+### 1. Data Loading
 
-### Observed Issues
-- Model performance varied across different runs
-- Predictions were unstable for identical inputs
+- Loads the dataset from `data/raw/creditcard.csv`
+- Verifies data shape and structure
 
-### Root Cause Analysis
+### 2. Data Cleaning
 
-1. Randomness not fully controlled  
-   - Model training and cross-validation involved randomness
+- Removes duplicate rows  
+- Confirms there are no missing values  
+- Keeps class distribution intact  
 
-2. Feature scaling inconsistency  
-   - Scaling not bound to model pipeline
+### 3. Feature Engineering
 
-3. Data leakage risk  
-   - Preprocessing steps applied outside a unified pipeline
+Extra features are created to help the model learn better patterns:
 
-4. Evaluation instability  
-   - High variance due to imbalanced dataset
+- `Amount_log` → log transformation of transaction amount  
+- `Amount_squared` → emphasizes high-value transactions  
+- `Hour` → hour extracted from transaction time  
+- `Is_night` → night-time transaction flag  
 
+### 4. Model Training
 
+- Model used: `RandomForestClassifier`  
+- Stratified train-test split  
+- Cross-validated using F1 score  
+- Random seed fixed for reproducibility  
+- Trained model saved to `models/fraud_model.pkl`  
 
-### Debug Checklist
-- [x] Fixed random seeds everywhere
-- [x] Used stratified sampling
-- [x] Verified no preprocessing leakage
-- [x] Ensured consistent feature order
-- [x] Evaluated using stable metrics (F1, ROC-AUC)
+### 5. Evaluation
 
-## TASK 3: Model Performance Improvement
+The pipeline reports:
 
-### Improvements Applied
-- Hyperparameter tuning of RandomForest
-- Increased model capacity while controlling overfitting
-- Threshold tuning for better fraud recall
+- Precision  
+- Recall  
+- F1 Score  
+- ROC-AUC  
 
-### Results
-| Version | F1 Score |
-|------|----------|
-| Baseline | ~0.72 |
-| Improved | ~0.82 |
-
-### Justification
-Fraud patterns are non-linear and rare.
-Deeper trees with controlled splits captured complex interactions.
-Lower decision threshold improved recall without sacrificing precision.
-
-## TASK 4: ML System Design – Fraud Detection
-
-### System Overview
-The system is designed to detect fraudulent credit card transactions
-in real time using a trained machine learning model.
+These metrics are more meaningful than accuracy for imbalanced fraud data.
 
 ---
 
-### Components
+## Model Stability & Debugging
 
-#### 1. Data Ingestion
-- Incoming transactions are received via APIs or streaming systems
-- Example tools: REST API, Kafka
+During development:
 
-#### 2. Feature Engineering Service
-- Applies the same feature transformations used during training
-- Ensures feature consistency between training and inference
+- Performance variations were observed across runs  
+- Preprocessing and training logic were stabilized  
+- Randomness was controlled  
+- Feature flow was made consistent between training and evaluation  
 
-#### 3. Model Inference
-- Trained ML pipeline is loaded from disk
-- Generates fraud probability for each transaction
-- Threshold-based decision (fraud / non-fraud)
-
-#### 4. Monitoring & Drift Detection
-- Tracks prediction distribution and feature drift
-- Monitors key metrics like precision, recall, and F1-score
-- Alerts triggered if performance drops
-
-#### 5. Retraining Strategy
-- Periodic retraining using newly labeled data
-- Triggered when model performance degrades beyond a threshold
-- Updated model redeployed after validation
+Final results are stable and reproducible across multiple runs.
 
 ---
 
-### Production Considerations
-- Model versioning
-- Logging predictions for audit
-- Rollback mechanism in case of failure
+## How to Run the Project (Very Important)
 
-## System design diagram available in:
+### 1. Create and activate virtual environment
+```
+python -m venv venv
+venv\Scripts\activate
+```
+### 2. Install dependencies
+
+```
+pip install -r requirements.txt
+```
+
+
+### 3. Run the full pipeline
+
+```
+python run_pipeline.py
+```
+
+
+---
+
+## Example Output
+```
+Starting Fraud Detection Pipeline
+
+Data loaded
+Data cleaned
+Features engineered
+Train-test split done
+Model trained | CV F1 Score: 0.842
+
+Evaluation Results
+Precision: 0.885
+Recall: 0.726
+F1 Score: 0.798
+ROC-AUC: 0.972
+
+Pipeline executed successfully!
+```
+
+This single command proves that the entire ML system is working end-to-end.
+
+---
+
+## System Design
+
+A simple real-world fraud detection system design is included.
+
+### Flow
+
+- Transaction data ingestion  
+- Feature engineering service  
+- Model inference  
+- Fraud probability output  
+- Monitoring & retraining  
+
+Diagram available at:
+
+diagrams/system_design.png
 
 
 ---
 
 ## Tech Stack
-- Python
-- Pandas, NumPy
-- Scikit-learn
-- Joblib
-- Matplotlib
+
+- Python  
+- Pandas, NumPy  
+- Scikit-learn  
+- Joblib  
 
 ---
 
+## Final Notes
 
-## How to Run
-```
-1. Create virtual environment and install dependencies
-pip install -r requirements.txt
-python run_pipeline.py
-This command runs the complete ML pipeline end-to-end
-and prints evaluation metrics.
-```
+- Accuracy is intentionally not used due to class imbalance  
+- Focus is on F1 score, stability, and reproducibility  
+- Project is structured like a real ML engineering codebase, not a notebook experiment  
+
+This repository is verified by running `run_pipeline.py` successfully.
+
